@@ -10,8 +10,8 @@ const fs = require('fs'),
 cheerio = require('cheerio');
 
 
-const files = '../mds'
-const resultFiles='../pdfs'
+const files = 'md'
+const resultFiles = 'pdf'
 
 
 const preProcessHtml = (basePath) => {
@@ -30,10 +30,10 @@ const preProcessHtml = (basePath) => {
     }
 };
 
-let options = {
-    // preProcessHtml: function () { return through() },
+const reg = /^(.*)\.(.*)$/
+let commonOptions = {
     preProcessHtml: preProcessHtml(files),
-    cssPath: '../resume.css',
+    cssPath: 'resume.css',
     remarkable: {
         preset: 'full',
         html: true
@@ -45,16 +45,19 @@ const recureRead = (dir) => fs.readdir(dir, (err, childrenDir) => {
         console.log(err);
     } else {
         childrenDir.forEach(name => {
-            if (fs.lstatSync(`${dir}/${name}`).isDirectory()) {
-                recureRead(`${dir}/${name}`)
-            } else {
-                if (name.split('.')[1] === 'md') {
-                    fs.createReadStream(`${dir}/${name}`)
-                        .pipe(mp(options))
-                        .pipe(fs.createWriteStream(`${resultFiles}/${name.split('.')[0]}.pdf`));
-                    console.log(`${name} done!`)
-                }
-            }
+            if (!reg.test(name)) return
+            const [filename, ext] = reg.exec(name).slice(1)
+
+            let options = {...commonOptions};
+            if (fs.existsSync(`css/${filename}.css`))
+                options['cssPath'] = `css/${filename}.css`
+            console.log(options['cssPath'])
+
+            fs.createReadStream(`${dir}/${name}`)
+                .pipe(mp(options))
+                .pipe(fs.createWriteStream(`${resultFiles}/${name.split('.')[0]}.pdf`));
+
+            console.log(`${name} done!`)
         })
     }
 });

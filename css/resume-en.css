@@ -60,13 +60,13 @@ h1 + ul {
     text-align: center;
     margin: 0;
     padding: 0;
-    }
+}
 h1 + ul > li {
     display: inline;
     white-space: pre;
     list-style-type: none;
 }
-h1 + ul > li:after { 
+h1 + ul > li:after {
     content: "  \2022  ";
 }
 h1 + ul > li:last-child:after {
@@ -78,7 +78,7 @@ h1 + ul + p {
 }
 @media print {
     body {
-        font-size: 8pt;
+        font-size: 7pt;
         margin: 0;
         padding: 0;
         background: none;
