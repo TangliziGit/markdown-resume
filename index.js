@@ -46,7 +46,11 @@ const recureRead = (dir) => fs.readdir(dir, (err, childrenDir) => {
     } else {
         childrenDir.forEach(name => {
             if (!reg.test(name)) return
-            const [filename, ext] = reg.exec(name).slice(1)
+            const [filename, ext] = (() => {
+                const splits = name.split('.');
+                const len = splits.length;
+                return [splits.slice(0, len-1).join('.'), splits[len-1]];
+            })();
 
             let options = {...commonOptions};
             if (fs.existsSync(`css/${filename}.css`))
@@ -55,9 +59,9 @@ const recureRead = (dir) => fs.readdir(dir, (err, childrenDir) => {
 
             fs.createReadStream(`${dir}/${name}`)
                 .pipe(mp(options))
-                .pipe(fs.createWriteStream(`${resultFiles}/${name.split('.')[0]}.pdf`));
+                .pipe(fs.createWriteStream(`${resultFiles}/${filename}.pdf`));
 
-            console.log(`${name} done!`)
+            console.log(`${filename}.${ext} done!`)
         })
     }
 });
