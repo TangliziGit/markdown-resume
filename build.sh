@@ -1,5 +1,5 @@
 mkdir pdf
-mkdir md
+rm -r md && mkdir md
 
 for filename in $(ls pre-md | grep ".*\.md"); do
     sed -e "s/^===/<div><span>/g" \

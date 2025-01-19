@@ -33,7 +33,8 @@ const preProcessHtml = (basePath) => {
 const reg = /^(.*)\.(.*)$/
 let commonOptions = {
     preProcessHtml: preProcessHtml(files),
-    cssPath: 'resume.css',
+    cssPath: 'css/resume.css',
+    paperBorder: '1cm',
     remarkable: {
         preset: 'full',
         html: true
